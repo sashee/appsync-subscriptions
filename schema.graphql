@@ -1,0 +1,46 @@
+type Group {
+	name: String!
+	users: [User!]!
+}
+
+type Todo {
+	id: ID!
+	name: String!
+	checked: Boolean!
+	created: AWSDateTime!
+	user: User!
+}
+
+type User {
+	id: ID!
+	name: String!
+	todos: [Todo!]!
+}
+
+type TodoEvent {
+	userId: ID!
+	groupId: ID!
+	todo: Todo!
+}
+
+type Subscription {
+	newTodo(name: String): Todo
+	@aws_subscribe(mutations: ["addTodo"])
+	todo(userId: ID, groupId: ID): TodoEvent
+	@aws_subscribe(mutations: ["notifyTodo"])
+}
+
+type Mutation {
+	addTodo(userId: ID!, name: String!): Todo!
+	notifyTodo(id: ID!): TodoEvent!
+}
+
+type Query {
+	allGroups: [Group!]!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}
