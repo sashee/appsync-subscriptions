@@ -46,8 +46,7 @@ data "aws_iam_policy_document" "appsync" {
       "appsync:GraphQL",
     ]
     resources = [
-"*",
-			#"${aws_appsync_graphql_api.appsync.arn}/types/Mutation/fields/notifyTodo"
+			"${aws_appsync_graphql_api.appsync.arn}/types/Mutation/fields/notifyTodo"
     ]
   }
 }
