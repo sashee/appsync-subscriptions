@@ -3,12 +3,19 @@ type Group {
 	users: [User!]!
 }
 
+enum Severity {
+	LOW
+	MEDIUM
+	HIGH
+}
+
 type Todo {
 	id: ID!
 	name: String!
 	checked: Boolean!
 	created: AWSDateTime!
 	user: User!
+	severity: Severity!
 }
 
 type User {
@@ -20,19 +27,22 @@ type User {
 type TodoEvent {
 	userId: ID!
 	groupId: ID!
-	todo: Todo!
+	todoId: ID!
+	severity: Severity!
+	todo: Todo
 }
 
 type Subscription {
 	newTodo(name: String): Todo
 	@aws_subscribe(mutations: ["addTodo"])
-	todo(userId: ID, groupId: ID): TodoEvent
+	todo(userId: ID, groupId: ID, minSeverity: Severity): TodoEvent
 	@aws_subscribe(mutations: ["notifyTodo"])
 }
 
 type Mutation {
-	addTodo(userId: ID!, name: String!): Todo!
-	notifyTodo(id: ID!): TodoEvent!
+	addTodo(userId: ID!, name: String!, severity: Severity!): Todo!
+	removeTodo(id: ID!): ID!
+	notifyTodo(userId: ID!, groupId: ID!, severity: Severity!, id: ID!): TodoEvent!
 }
 
 type Query {

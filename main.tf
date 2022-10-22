@@ -28,6 +28,7 @@ data "aws_iam_policy_document" "appsync" {
   statement {
     actions = [
       "dynamodb:GetItem",
+      "dynamodb:DeleteItem",
       "dynamodb:PutItem",
 			"dynamodb:Query",
 			"dynamodb:Scan",
@@ -152,4 +153,11 @@ resource "aws_appsync_datasource" "notifyTodo" {
 			}
 		}
 	}
+}
+
+resource "aws_appsync_datasource" "none" {
+  api_id           = aws_appsync_graphql_api.appsync.id
+  name             = "none"
+  service_role_arn = aws_iam_role.appsync.arn
+  type             = "NONE"
 }
